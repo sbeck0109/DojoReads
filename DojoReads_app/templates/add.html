@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Favorite Books</title>
+<!-- CSS only -->
+{% load static %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+  integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+<link rel="stylesheet" href="{% static 'css/style.css' %}" />
+<script src="{% static 'js/script.js' %}"></script>
+
+<link rel="apple-touch-icon" href="/docs/4.5/assets/img/favicons/apple-touch-icon.png" sizes="180x180" />
+<link rel="icon" href="/docs/4.5/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png" />
+<link rel="icon" href="/docs/4.5/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png" />
+<link rel="manifest" href="/docs/4.5/assets/img/favicons/manifest.json" />
+<link rel="mask-icon" href="/docs/4.5/assets/img/favicons/safari-pinned-tab.svg" color="#563d7c" />
+<link rel="icon" href="/docs/4.5/assets/img/favicons/favicon.ico" />
+<meta name="msapplication-config" content="/docs/4.5/assets/img/favicons/browserconfig.xml" />
+<meta name="theme-color" content="#563d7c" />
+
+<style>
+  .bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+  }
+</style>
+<!-- Custom styles for this template -->
+<link href="pricing.css" rel="stylesheet" />
+<!-- Custom styles for this template -->
+</head>
+<body>
+  <!-- navbar -->
+  <div id="navbar"
+    class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+    <h5 class="my-0 mr-md-auto font-weight-normal">
+      Welcome, {{this_user.first_name}}
+    </h5>
+    <nav class="my-2 my-md-0 mr-md-3">
+      <a class="p-2 text-dark" href="{% url 'DojoReads:my_index' %}">Main</a>
+      <a class="p-2 text-dark" href="/books/add_book_and_review">Add Book and Review</a>
+      <a class="p-2 text-dark" href="#">Contact</a>
+      <a class="p-2 text-dark" href="#">Logout</a>
+    </nav>
+  </div>
+  <div class="container-lg">
+    <div class="form-group">
+      <h4>Add a New Book Title and an Review</h4>
+        <div class="messages_all">
+        {% if messages %}
+        <ul id="error_list" class="messages_list">
+          {% for message in messages %}
+          <li {% if message.tags %} class="{{message.tags}}" {% endif %}>
+            {{message}}
+          </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div><br>
+      <form action="{% url 'DojoReads:my_add_post_book' %}" method="POST">
+        {% csrf_token%}
+        <label for="title">Title:</label>
+        <input type="text" name="title" class="form-control" id="exampleFormControlInput1" /><br>
+        <label for="author_name">Author</label>
+        <select name="author">Choose from the list:
+          {% for author in all_authors%}
+          <option value="{{author.name}}">{{author.name}}</option>
+          {% endfor %}
+        </select>
+        <br>
+        Or add a new author:
+        <input type="text" name="new_author" class="form-control" id="exampleFormControlInput1" /><br>
+        <label for="review">Review:</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" name="review" rows="3"></textarea><br>
+        <input type="hidden" name="user_id" value="{{request.session.user_id}}" />
+        <label for="rating">rating: </label>
+        <input class="col-1" type="number" name="rating" min="1" max="5"><br>
+        <br>
+        <button type="submit" class="btn btn-outline-dark">Add Book and Review</button>
+      </form>
+  </div>
+
+</body>
+</html>
